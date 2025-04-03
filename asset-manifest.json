@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/6pi-2Calculator/static/css/main.97d7ef70.css",
+    "main.js": "/6pi-2Calculator/static/js/main.4836c2d1.js",
+    "static/js/453.83bdee10.chunk.js": "/6pi-2Calculator/static/js/453.83bdee10.chunk.js",
+    "index.html": "/6pi-2Calculator/index.html",
+    "main.97d7ef70.css.map": "/6pi-2Calculator/static/css/main.97d7ef70.css.map",
+    "main.4836c2d1.js.map": "/6pi-2Calculator/static/js/main.4836c2d1.js.map",
+    "453.83bdee10.chunk.js.map": "/6pi-2Calculator/static/js/453.83bdee10.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.97d7ef70.css",
+    "static/js/main.4836c2d1.js"
+  ]
+}
