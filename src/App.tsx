@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 
 function App() {
@@ -54,11 +54,37 @@ function Calculator()
   const [display,setDisplay] = useState<string|null>(null);
   const [history,updateHistory] = useState<string[]>([]);
 
+  const handleKeyboard = (event:React.KeyboardEvent|KeyboardEvent) =>
+    {
+      if(event.key === '=')
+      { 
+          calculate();        
+      }
+      else if(event.key === 'Backspace')
+        { 
+          deleteSymbolClick();
+        }
+      else if(buttons.includes(event.key))
+        { 
+          buttonClick(event.key);
+        }
+      console.log("eventkey "+event.key)
+    }
+  useEffect(()=>
+  {
+   window.addEventListener('keydown',handleKeyboard)
+
+   return ()=>
+   {
+    window.removeEventListener('keydown',handleKeyboard)
+   }
+  },[]);
   let displayCache:string|null = null;
 
+  
   return (
     <div className='wrap'>
-    <div className='calculator' tabIndex={0} onKeyDown={(click)=>handleKeyboard(click)}>
+    <div className='calculator' tabIndex={0}>
       <Display value={display}/>
       <div className='buttons'>
         {buttons.map((button)=>
@@ -85,13 +111,7 @@ function Calculator()
     </div>
     
   )
-  function handleKeyboard(event:React.KeyboardEvent<HTMLDivElement>)
-  {
-    if(event.key === '=' || event.key === 'Enter') calculate();
-    else if(event.key === 'Backspace') deleteSymbolClick();
-    else if(buttons.includes(event.key)) buttonClick(event.key);
-    console.log(event.key)
-  }
+ 
  
   function calculate():void
   {
@@ -99,10 +119,9 @@ function Calculator()
     {
       displayCache = display
       const result = safeEvaluation(display)
-      console.log(display);
-     // console.log(result)
       if(result!== null && result!== undefined)
       {
+        setDisplay(null);
         setDisplay(result.toString());
         updateHistory(history.concat(`${display} = ${result}`))
       }
@@ -111,6 +130,7 @@ function Calculator()
         setDisplay(displayCache.toString())
       }
     }
+    
   }
   function clearClick():void
   {
@@ -118,14 +138,18 @@ function Calculator()
   }
   function buttonClick(buttonValue:string):void
   {
+    console.log("button click" + buttonValue)
     setDisplay((display)=>
     {
-      if(display!=null)
+      if(display!==null && display!==undefined)
       {
         return display+buttonValue;
       }
       else
-      return buttonValue
+      {
+        return buttonValue
+      }
+     
     })
   }
   function deleteSymbolClick()
@@ -138,8 +162,8 @@ function Calculator()
         display = display.toString()
         return display.slice(0,-1)
       }
-      else
-      return display;
+      else return display;
+      
     })
   }
 
