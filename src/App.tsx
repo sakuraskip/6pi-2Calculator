@@ -2,10 +2,24 @@ import React, { useState } from 'react';
 import './App.css';
 
 function App() {
+  const [isDarkTheme,setTheme] = useState<boolean>(false)
+
+  function changeTheme()
+  {
+    setTheme(!isDarkTheme)
+  }
+  let themeClass:string = 'lightTheme'
+  if(isDarkTheme)
+  {
+    themeClass = 'darkTheme'
+  }
   return (
-    <div className='main'>
+   
+    <div className={`main ${themeClass}`}>
       <Calculator/>
+      <button className='changetheme' onClick={changeTheme}>Сменить тему</button>
     </div>
+    
   );
 }
 function safeEvaluation(expression:string)
@@ -37,17 +51,13 @@ function Button({title,onClick}:ButtonProps)
 }
 function Calculator()
 {
-  const [display,setDisplay] = useState<string|null>(null)
+  const [display,setDisplay] = useState<string|null>(null);
+  const [history,updateHistory] = useState<string[]>([]);
+
   let displayCache:string|null = null;
-  
-  function handleKeyboard(event:React.KeyboardEvent<HTMLDivElement>)
-  {
-    if(event.key === '=' || event.key === 'Enter') calculate();
-    else if(event.key === 'Backspace') deleteSymbolClick();
-    else if(buttons.includes(event.key)) buttonClick(event.key);
-    console.log(event.key)
-  }
+
   return (
+    <div className='wrap'>
     <div className='calculator' tabIndex={0} onKeyDown={(click)=>handleKeyboard(click)}>
       <Display value={display}/>
       <div className='buttons'>
@@ -63,18 +73,38 @@ function Calculator()
           }></Button>
         ))}
       </div>
+      <br/>
+     
     </div>
+    <div className='history'>
+        {history.map((value,index)=>
+        (
+          <div key={index}>{value}</div>
+        ))}
+      </div>
+    </div>
+    
   )
+  function handleKeyboard(event:React.KeyboardEvent<HTMLDivElement>)
+  {
+    if(event.key === '=' || event.key === 'Enter') calculate();
+    else if(event.key === 'Backspace') deleteSymbolClick();
+    else if(buttons.includes(event.key)) buttonClick(event.key);
+    console.log(event.key)
+  }
+ 
   function calculate():void
   {
     if(display != null)
     {
       displayCache = display
       const result = safeEvaluation(display)
-      console.log(result)
+      console.log(display);
+     // console.log(result)
       if(result!== null && result!== undefined)
       {
         setDisplay(result.toString());
+        updateHistory(history.concat(`${display} = ${result}`))
       }
       else
       {
